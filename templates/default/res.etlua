@@ -1,0 +1,26 @@
+package com.<%-projectname %>.game.games.<%- modname %>.message;
+
+import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;
+import com.<%-projectname %>.game.core.annotation.ResMsg;
+import com.<%-projectname %>.game.message.<%- modname %>ModuleMsgIdConstant;
+import com.<%-projectname %>.game.message.core.ResMessage;
+import lombok.Data;
+
+<%if comment then%>
+/**
+ * <%- comment %>
+ */
+<% end -%>
+@ResMsg(<%- modname %>ModuleMsgIdConstant.<%- modname %>.<%-name:gsub("%a", string.upper, 1)
+%>)
+@Data
+public class Res<%-name:gsub("%a", string.upper, 1)%>Msg implements ResMessage {
+   <%for i,a in ipairs(res) do%>
+    /**
+     * <%- a.comment %>
+     */
+    @Protobuf(order = <%- i %>)
+    private <%- a.type %> <%- a.value %><%if a.default then%> = <%-a.default%><%end %>;
+    <% end -%>
+
+}

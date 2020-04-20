@@ -1,0 +1,26 @@
+package com.<%-projectname %>.game.games.<%- modname %>.message;
+
+import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;
+import com.<%-projectname %>.game.core.annotation.ReqMsg;
+import com.<%-projectname %>.game.message.<%- modname %>ModuleMsgIdConstant;
+import com.<%-projectname %>.game.message.core.ReqMessage;
+import lombok.Data;
+
+<%if comment then%>
+/**
+ * <%- comment %>
+ */
+<% end -%>
+@ReqMsg(<%- modname %>ModuleMsgIdConstant.<%- modname %>.<%-name:gsub("%a", string.upper, 1)
+%>)
+@Data
+public class Req<%- name:gsub("%a", string.upper, 1)%>Msg implements ReqMessage {
+   <%for i,a in ipairs(req) do%>
+    /**
+     * <%- a.comment %>
+     */
+    @Protobuf(order = <%- i %>)
+    private <%- a.type %> <%- a.value %><%if a.default then%> = <%-a.default%><%end %>;
+    <% end -%>
+
+}

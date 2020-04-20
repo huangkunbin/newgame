@@ -1,0 +1,28 @@
+package com.<%-projectname %>.game.core.service.games.<%- modname %>.handler;
+
+import com.<%-projectname %>.game.core.service.games.<%- modname %>.manager.<%- modname:gsub("%a", string.upper, 1)%>Mgr;
+import com.google.inject.Inject;
+import com.<%-projectname %>.game.core.annotation.ReqMsgHandler;
+import com.<%-projectname %>.game.message.<%- modname:gsub("%a", string.upper, 1)%>ModuleMsgIdConstant;
+import com.<%-projectname %>.game.message.core.ReqMessage;
+import com.<%-projectname %>.game.message.core.ResMessage;
+import com.<%-projectname %>.game.server.handler.ReqMessageHandler;
+import com.<%-projectname %>.game.core.service.player.struct.Player;
+import com.<%-projectname %>.game.games.<%- modname %>.message.Req<%- name:gsub("%a", string.upper, 1)%>Msg;
+
+/**
+ * <%-comment %>
+ */
+@ReqMsgHandler(<%- modname %>ModuleMsgIdConstant.<%- modname:upper() %>.<%- name:upper() %>)
+public class Req<%- name:gsub("%a", string.upper, 1)%>Handler implements ReqMessageHandler {
+
+    @Inject
+    private <%- modname:gsub("%a", string.upper, 1)%>Mgr <%- modname %>Mgr;
+
+    @Override
+    public ResMessage action(Player player, ReqMessage message) {
+        Req<%- name:gsub("%a", string.upper, 1)%>Msg msg = (Req<%- name:gsub("%a", string.upper, 1)%>Msg) message;
+
+        
+    }
+}
