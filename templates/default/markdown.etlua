@@ -1,4 +1,4 @@
-### <%-comment %>模块
+### <%-comment %>
 
 
 <%for _,m in ipairs(methods) do%>
