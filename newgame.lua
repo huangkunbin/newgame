@@ -1,13 +1,16 @@
 local idl = require "idl"
 local etlua = require "etlua"
--- local inspect = require("inspect")
+local inspect = require("inspect")
+
+
 
 local PROJECT_NAME = "demo"
 local TEMPLATES_PATH = "templates/default"
 local MESSAGE_PATH = "message/"
 local CLASS_PATH = "class/"
 local HANDLER_PATH = "handler/"
-
+local MSGID_PATH = "msgid/"
+local MARKDOWN_PATH = "markdown/"
 
 
 local env = {}
@@ -32,7 +35,7 @@ local function file_exists(path)
   return file ~= nil
 end
 
-local function create_file(type,temp_file_path,parameter)
+local function create_file(typ,temp_file_path,parameter)
   local template_file = assert(io.open(temp_file_path))
   local template = template_file:read("*a")
   template_file:close()
@@ -42,23 +45,29 @@ local function create_file(type,temp_file_path,parameter)
 
   local file_path
   local file_name
-  if type=="Class" then
+  if typ == "Class" then
     file_path = CLASS_PATH
-    file_name =file_path..parameter.name:gsub("%a", string.upper, 1)..".java"
-  elseif type == "Handler" then
+    file_name = file_path..parameter.name:gsub("%a", string.upper, 1)..".java"
+  elseif typ == "Handler" then
     file_path = HANDLER_PATH
-    file_name =file_path.."Req"..parameter.name:gsub("%a", string.upper, 1)..type..".java"
+    file_name = file_path.."Req"..parameter.name:gsub("%a", string.upper, 1)..typ..".java"
+  elseif typ == "Msgid" then
+    file_path = MSGID_PATH
+    file_name = file_path..parameter.modname:gsub("%a", string.upper, 1).."ModuleMsgIdConstant.java"
+  elseif typ == "Markdown" then
+    file_path = MARKDOWN_PATH
+    file_name = file_path..parameter.modname..".md"
   else
     file_path = MESSAGE_PATH
-    file_name =file_path..type..parameter.name:gsub("%a", string.upper, 1).."Class.java"
+    file_name = file_path..typ..parameter.name:gsub("%a", string.upper, 1).."Msg.java"
   end
 
   if not file_exists(file_path) then
     os.execute("mkdir "..file_path)
   end
 
-  if type=="Req" or type=="Res" then
-    file_name = file_name.."Class.java"
+  if typ == "Handler" and file_exists(file_name) then
+    return
   end
 
   local code = assert(io.open(file_name, 'w'))
@@ -66,12 +75,20 @@ local function create_file(type,temp_file_path,parameter)
   code:close()
 end
 
-local module = idl.mods
+local mod = idl.mods
 
 local parameter = {}
 parameter.projectname = PROJECT_NAME
-parameter.modname = module.modname
-for _,m in ipairs(module.methods) do
+parameter.modname = mod.modname
+parameter.comment = mod.comment
+parameter.methods = mod.methods
+create_file("Msgid",TEMPLATES_PATH.."/msgid.etlua",parameter)
+create_file("Markdown",TEMPLATES_PATH.."/markdown.etlua",parameter)
+
+parameter = {}
+parameter.projectname = PROJECT_NAME
+parameter.modname = mod.modname
+for _,m in ipairs(mod.methods) do
     parameter.name = m.name
     parameter.comment = m.comment
     parameter.req = m.req
@@ -89,7 +106,7 @@ local clz = idl.clz
 
 parameter = {}
 parameter.projectname = PROJECT_NAME
-parameter.modname = module.modname
+parameter.modname = mod.modname
 for _,c in pairs(clz) do
   parameter.name = c.name
   parameter.comment = c.comment

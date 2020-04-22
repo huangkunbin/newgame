@@ -1,0 +1,19 @@
+package com.<%-projectname %>.game.message;
+
+/**
+ * <%-comment %> ModuleMsgIdConstant
+ * @author auto
+ */
+public interface <%- modname:gsub("%a", string.upper, 1)%>ModuleMsgIdConstant extends ModuleMsgIdConstant {
+
+    interface <%-modname:upper() %> {
+        <%for _,m in ipairs(methods) do%>
+        /**
+         * <%-m.comment %>
+         */
+        int <%-m.name:upper() %> = <%-m.id %>;
+        <%end %> 
+    }
+
+
+}

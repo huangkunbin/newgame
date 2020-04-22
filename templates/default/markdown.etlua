@@ -1,0 +1,29 @@
+### <%-comment %>模块
+
+
+<%for _,m in ipairs(methods) do%>
+* <%-m.id %>     
+
+<%-m.comment %>:<%-m.name:upper() -%> 
+
+<%if m.req then-%>
+请求参数
+
+| 参数名          | 类型    | 备注                              |
+| :---------------: | :---------: | :----------------:|
+<%for _,a in ipairs(m.req) do-%>
+| <%- a.value %> | <%- a.type %> | <%if a.value == "id" then%><%-a.default%><%else%><%-a.comment%><%end-%> |
+<% end -%>
+<%end-%>
+
+<%if m.res then-%>
+响应参数
+
+| 参数名          | 类型    | 备注                              |
+| :---------------: | :---------: | :----------------:|
+<%for _,a in ipairs(m.res) do-%>
+| <%- a.value %> | <%- a.type %> | <%if a.value == "id" then%><%-a.default%><%else%><%-a.comment%><%end-%> |
+<% end -%>
+<%end%>
+
+<%end %> 
