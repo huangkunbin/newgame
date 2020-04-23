@@ -36,7 +36,17 @@ mod "demo" "测试模块"
       int "msgId" "信息ID",
       string "msg" "信息"
   }
-}
+},
+[104] = api "showCard" "出牌"
+ {
+  req {
+      int "tableId" "桌子ID",
+      list("Integer") "cards" "手牌"
+  },
+  res {
+      list("Integer") "cards" "手牌"
+  }
+},
 }
 
 
