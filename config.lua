@@ -9,6 +9,8 @@ return {
     CLASS_PATH = "class/",
     -- handler函数路径
     HANDLER_PATH = "handler/",
+    -- 机器人handler函数路径
+    ROBOT_HANDLER_PATH = "robothandler/",
     --  消息ID路径
     MSGID_PATH = "msgid/",
     -- markdown文档路径

@@ -44,8 +44,10 @@ local TEMPLATES_PATH = ROOT_PATH..conf.TEMPLATES_PATH
 local MESSAGE_PATH = ROOT_PATH..conf.MESSAGE_PATH
 local CLASS_PATH = ROOT_PATH..conf.CLASS_PATH
 local HANDLER_PATH = ROOT_PATH..conf.HANDLER_PATH
+local ROBOT_HANDLER_PATH = ROOT_PATH..conf.ROBOT_HANDLER_PATH
 local MSGID_PATH = ROOT_PATH..conf.MSGID_PATH
 local MARKDOWN_PATH = ROOT_PATH..conf.MARKDOWN_PATH
+
 
 
 
@@ -75,6 +77,9 @@ local function create_file(typ,temp_file_path,parameter)
   elseif typ == "Markdown" then
     file_path = MARKDOWN_PATH
     file_name = file_path..parameter.modname..".md"
+  elseif typ == "RobotHandler" then
+    file_path = ROBOT_HANDLER_PATH
+    file_name = file_path.."Res"..parameter.name:gsub("%a", string.upper, 1).."Handler"..".java"
   else
     file_path = MESSAGE_PATH
     file_name = file_path..typ..parameter.name:gsub("%a", string.upper, 1).."Msg.java"
@@ -84,7 +89,7 @@ local function create_file(typ,temp_file_path,parameter)
     os.execute("mkdir "..file_path)
   end
 
-  if typ == "Handler" and file_exists(file_name) then
+  if (typ == "Handler" or typ == "RobotHandler") and file_exists(file_name) then
     return
   end
 
@@ -149,6 +154,7 @@ for _,m in ipairs(mod.methods) do
     if parameter.res then
     parameter.pkgs = get_pkgs(parameter.res)
     create_file("Res",TEMPLATES_PATH.."/res.etlua",parameter)
+    create_file("RobotHandler",TEMPLATES_PATH.."robothandler.etlua",parameter)
     end
 end
 

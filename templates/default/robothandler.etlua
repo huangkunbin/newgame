@@ -1,0 +1,30 @@
+package com.<%-projectname %>.game.games.<%- modname %>.handler;
+
+import com.<%-projectname %>.game.core.annotation.ResMsgHandler;
+import com.<%-projectname %>.game.games.<%- modname %>.message.Res<%- name:gsub("%a", string.upper, 1)%>Msg;
+import com.<%-projectname %>.game.message.<%- modname:gsub("%a", string.upper, 1)%>ModuleMsgIdConstant;
+import com.<%-projectname %>.game.message.core.ResMessage;
+import com.<%-projectname %>.game.robot.core.Player;
+import com.<%-projectname %>.game.robot.handler.ResMessageHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
+/**
+ * <%-comment %>
+ * @author auto
+ */
+@ResMsgHandler(<%- modname:gsub("%a", string.upper, 1)%>ModuleMsgIdConstant.<%- modname:upper() %>.<%- snake(name):upper() %>)
+public class Res<%- name:gsub("%a", string.upper, 1)%>Handler implements ResMessageHandler {
+
+    private static final Logger LOG = LoggerFactory.getLogger(Res<%- name:gsub("%a", string.upper, 1)%>Handler.class);
+
+    @Override
+    public void action(Player player, ResMessage message) {
+        Res<%- name:gsub("%a", string.upper, 1)%>Msg msg = (Res<%- name:gsub("%a", string.upper, 1)%>Msg) message;
+
+        
+    }
+}
+
+

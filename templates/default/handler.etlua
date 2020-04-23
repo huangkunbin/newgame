@@ -14,7 +14,7 @@ import com.<%-projectname %>.game.core.service.games.<%- modname %>.manage.<%- m
  * <%-comment %>
  * @author auto
  */
-@ReqMsgHandler(<%- modname:gsub("%a", string.upper, 1)%>ModuleMsgIdConstant.<%- modname:upper() %>.<%- name:upper() %>)
+@ReqMsgHandler(<%- modname:gsub("%a", string.upper, 1)%>ModuleMsgIdConstant.<%- modname:upper() %>.<%- snake(name):upper() %>)
 public class Req<%- name:gsub("%a", string.upper, 1)%>Handler implements ReqMessageHandler {
 
     @Inject
