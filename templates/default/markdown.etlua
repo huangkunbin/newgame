@@ -4,7 +4,7 @@
 <%for _,m in ipairs(methods) do%>
 * <%-m.id %>     
 
-<%-m.comment %>:<%-m.name:upper() -%> 
+<%-m.comment %>:<%-snake(m.name):upper() -%> 
 
 <%if m.req then-%>
 请求参数
@@ -22,8 +22,21 @@
 | 参数名          | 类型    | 备注                              |
 | :---------------: | :---------: | :----------------:|
 <%for _,a in ipairs(m.res) do-%>
-| <%- a.value %> | <%- a.type %> | <%if a.value == "id" then%><%-a.default%><%else%><%-a.comment%><%end-%> |
+| <%- a.value %> | <%if string.sub(a.type,1,4) == "List" then%><%- "["..a.innertype.."]" %><%else%><%- a.type %><%end%> | <%if a.value == "id" then%><%-a.default%><%else%><%-a.comment%><%end-%> |
 <% end -%>
 <%end%>
+***
+<%end %> 
+
+
+
+<%for _,c in pairs(clz) do%>
+| <%-c.name%>参数名          | 类型    | 备注                              |
+| :---------------: | :---------: | :----------------:|
+<%for _,a in ipairs(c.value) do-%>
+| <%- a.value %> | <%- a.type %> | <%if a.value == "id" then%><%-a.default%><%else%><%-a.comment%><%end-%> |
+<% end -%>
+
+***
 
 <%end %> 

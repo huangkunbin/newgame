@@ -2,25 +2,32 @@ package com.<%-projectname %>.game.games.<%- modname %>.message;
 
 import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;
 import com.<%-projectname %>.game.core.annotation.ReqMsg;
-import com.<%-projectname %>.game.message.<%- modname %>ModuleMsgIdConstant;
+import com.<%-projectname %>.game.message.<%-modname:gsub("%a", string.upper, 1)%>ModuleMsgIdConstant;
 import com.<%-projectname %>.game.message.core.ReqMessage;
 import lombok.Data;
+<%for _,pkg in pairs(pkgs) do-%>
+<%-pkg..";"%>
+<% end -%>
 
 <%if comment then%>
 /**
  * <%- comment %>
+ * @author auto
  */
 <% end -%>
-@ReqMsg(<%- modname %>ModuleMsgIdConstant.<%- modname %>.<%-name:gsub("%a", string.upper, 1)
-%>)
+@ReqMsg(<%- modname:gsub("%a", string.upper, 1)%>ModuleMsgIdConstant.<%- modname:upper() %>.<%-snake(name):upper()%>)
 @Data
 public class Req<%- name:gsub("%a", string.upper, 1)%>Msg implements ReqMessage {
    <%for i,a in ipairs(req) do%>
     /**
      * <%- a.comment %>
      */
-    @Protobuf(order = <%- i %>)
-    private <%- a.type %> <%- a.value %><%if a.default then%> = <%-a.default%><%end %>;
+    @Protobuf(order = <%- i %><%if a.fieldType then%>, fieldType = <%-a.fieldType%><%end%>)
+    <%if i == 1 then-%>
+private <%- a.type %> <%- a.value %> = <%- modname:gsub("%a", string.upper, 1)%>ModuleMsgIdConstant.<%- modname:upper() %>.<%-snake(name):upper()%>;
+    <%else-%>
+private <%- a.type %> <%- a.value %><%if a.default then%> = <%-a.default%><%end %>;
+    <%end -%>
     <% end -%>
 
 }

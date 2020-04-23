@@ -3,16 +3,6 @@ local etlua = require "etlua"
 local inspect = require("inspect")
 
 
-
-local PROJECT_NAME = "demo"
-local TEMPLATES_PATH = "templates/default"
-local MESSAGE_PATH = "message/"
-local CLASS_PATH = "class/"
-local HANDLER_PATH = "handler/"
-local MSGID_PATH = "msgid/"
-local MARKDOWN_PATH = "markdown/"
-
-
 local env = {}
 env.mod = idl.mod
 env.api = idl.api
@@ -24,15 +14,43 @@ env.long = idl.long
 env.string = idl.string
 env.classdef = idl.classdef
 env.class = idl.class
+env.list = idl.list
 env.require = require
 
 local proto = arg[1]
 loadfile(proto,"t",env)()
 
+local mod = idl.mods
+local clz = idl.clz
+
+local ROOT_PATH = "../../"
+local conf_path = ROOT_PATH.."game-"..mod.modname.."-parent/config.lua"
+
 local function file_exists(path)
   local file = io.open(path, "rb")
   if file then file:close() end
   return file ~= nil
+end
+
+if not file_exists(conf_path) then
+  ROOT_PATH = "./"
+  conf_path = ROOT_PATH.."config.lua"
+end
+
+local conf = loadfile(conf_path,"t")()
+
+local PROJECT_NAME = conf.PROJECT_NAME
+local TEMPLATES_PATH = ROOT_PATH..conf.TEMPLATES_PATH
+local MESSAGE_PATH = ROOT_PATH..conf.MESSAGE_PATH
+local CLASS_PATH = ROOT_PATH..conf.CLASS_PATH
+local HANDLER_PATH = ROOT_PATH..conf.HANDLER_PATH
+local MSGID_PATH = ROOT_PATH..conf.MSGID_PATH
+local MARKDOWN_PATH = ROOT_PATH..conf.MARKDOWN_PATH
+
+
+
+local function snake(s)
+  return s:gsub('%f[^%l]%u','_%1'):gsub('%f[^%a]%d','_%1'):gsub('%f[^%d]%a','_%1'):gsub('(%u)(%u%l)','%1_%2'):lower()
 end
 
 local function create_file(typ,temp_file_path,parameter)
@@ -70,20 +88,49 @@ local function create_file(typ,temp_file_path,parameter)
     return
   end
 
+
   local code = assert(io.open(file_name, 'w'))
   code:write(file)
   code:close()
 end
 
-local mod = idl.mods
+
+local class_pkg_path = "import com."..PROJECT_NAME..".game.games."..mod.modname..".dto."
+
+local function get_pkgs(args)
+  local pkgs = {}
+  for _,a in ipairs(args) do
+   if clz[a.type] then
+      pkgs[class_pkg_path..a.type] = class_pkg_path..a.type
+   end
+   if a.fieldType then
+    pkgs["import com.baidu.bjf.remoting.protobuf.FieldType"] = "import com.baidu.bjf.remoting.protobuf.FieldType"
+ end
+   if string.sub(a.type,1,4) == "List" then
+    pkgs["import java.util.List"] = "import java.util.List"
+    if clz[a.innertype] then
+      pkgs[class_pkg_path..a.innertype] = class_pkg_path..a.innertype
+    end
+   end
+  end
+  local sort_pkgs = {}
+  for _,p in pairs(pkgs) do
+    sort_pkgs[#sort_pkgs+1] = p
+  end
+  table.sort(sort_pkgs)
+  return sort_pkgs
+end
 
 local parameter = {}
+
 parameter.projectname = PROJECT_NAME
 parameter.modname = mod.modname
 parameter.comment = mod.comment
 parameter.methods = mod.methods
-create_file("Msgid",TEMPLATES_PATH.."/msgid.etlua",parameter)
-create_file("Markdown",TEMPLATES_PATH.."/markdown.etlua",parameter)
+parameter.snake = snake
+create_file("Msgid",TEMPLATES_PATH.."msgid.etlua",parameter)
+parameter.clz = clz
+create_file("Markdown",TEMPLATES_PATH.."markdown.etlua",parameter)
 
 parameter = {}
 parameter.projectname = PROJECT_NAME
@@ -93,16 +140,19 @@ for _,m in ipairs(mod.methods) do
     parameter.comment = m.comment
     parameter.req = m.req
     parameter.res = m.res
+    parameter.snake = snake
     if parameter.req then
-    create_file("Req",TEMPLATES_PATH.."/req.etlua",parameter)
-    create_file("Handler",TEMPLATES_PATH.."/handler.etlua",parameter)
+    parameter.pkgs = get_pkgs(parameter.req)
+    create_file("Req",TEMPLATES_PATH.."req.etlua",parameter)
+    create_file("Handler",TEMPLATES_PATH.."handler.etlua",parameter)
     end
     if parameter.res then
+    parameter.pkgs = get_pkgs(parameter.res)
     create_file("Res",TEMPLATES_PATH.."/res.etlua",parameter)
     end
 end
 
-local clz = idl.clz
+
 
 parameter = {}
 parameter.projectname = PROJECT_NAME
@@ -111,8 +161,12 @@ for _,c in pairs(clz) do
   parameter.name = c.name
   parameter.comment = c.comment
   parameter.value = c.value
-  create_file("Class",TEMPLATES_PATH.."/class.etlua",parameter)
+  parameter.pkgs = get_pkgs(c.value)
+  create_file("Class",TEMPLATES_PATH.."class.etlua",parameter)
 end
+
+
+
 
 
 

@@ -1,8 +1,25 @@
 local idl = {}
 
+local T = {
+  int = "int",
+  long = "long",
+  String = "String",
+  Integer = "Integer",
+  Long = "Long"
+}
+idl.T = T
+
 local mods = {}
 
 idl.mods = mods
+
+local function trim(s)
+  return (s:gsub("^%s*(.-)%s*$", "%1"))
+end
+
+local function sort_methods(a,b)
+  return tonumber(a.id) < tonumber(b.id)
+end
 
 local function add_method(t)
     for id, m in pairs(t) do
@@ -10,14 +27,15 @@ local function add_method(t)
        local id_t = idl.int "id" "ID"
        id_t.default=id
        if m.req then
-       table.insert( m.req, 1,id_t)
+        table.insert( m.req, 1,id_t)
        end
        if m.res then
         table.insert( m.res, 1,id_t)
        end
        mods.methods[#mods.methods+1] = m
     end
-  end
+    table.sort(mods.methods,sort_methods)
+end
 
 function idl.mod(modname)
     mods.modname = modname
@@ -61,23 +79,41 @@ function idl.res(t)
 end
 
 function idl.int(val)
-    local t = {type = "int",value = val}
+    local t = {type = T.int,value = val}
     return function(str)
       t.comment = str
       return t
     end
 end
 
+function idl.Integer(val)
+  local t = {type = T.Integer,value = val}
+  t.fieldType = "FieldType.INT32"
+  return function(str)
+    t.comment = str
+    return t
+  end
+end
+
 function idl.long(val)
-    local t = {type = "long",value = val}
+    local t = {type = T.long,value = val}
     return function(str)
       t.comment = str
       return t
     end
+end
+
+function idl.Long(val)
+  local t = {type = T.Long,value = val}
+  t.fieldType = "FieldType.INT64"
+  return function(str)
+    t.comment = str
+    return t
   end
+end
 
 function idl.string(val)
-    local t = {type = "String",value = val}
+    local t = {type = T.String,value = val}
     return function(str)
       t.comment = str
       return t
@@ -103,10 +139,33 @@ end
 idl.class = setmetatable({}, {__index = class})
 
 function idl.classdef(name)
+  name = trim(name)
+  if not T[name] then
+    T[name] = name
+  end
   local t = {type = "classdef", name = name}
   return function(value)
         t.value = value
         clz[t.name] = t
+        table.sort(clz)
+  end
+end
+
+function idl.list(E)
+  E = trim(E)
+  local t = {type = "List<"..E..">",value = ""}
+  t.innertype = T[E]
+  if t.innertype == T.Integer then
+    t.fieldType = "FieldType.INT32"
+  elseif t.innertype == T.Long then
+    t.fieldType = "FieldType.INT64"
+  end
+  return function (val)
+    t.value = val
+    return function(str)
+      t.comment = str
+      return t
+    end
   end
 end
 

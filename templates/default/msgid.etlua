@@ -11,7 +11,7 @@ public interface <%- modname:gsub("%a", string.upper, 1)%>ModuleMsgIdConstant ex
         /**
          * <%-m.comment %>
          */
-        int <%-m.name:upper() %> = <%-m.id %>;
+        int <%-snake(m.name):upper() %> = <%-m.id %>;
         <%end %> 
     }
 

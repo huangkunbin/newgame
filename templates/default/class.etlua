@@ -1,21 +1,21 @@
 package com.<%-projectname %>.game.games.<%- modname %>.dto;
 
-import com.baidu.bjf.remoting.protobuf.FieldType;
 import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;
 import lombok.Data;
-
-<%if comment then%>
-/**
- * <%- comment %>
- */
+<%for _,pkg in pairs(pkgs) do-%>
+<%-pkg..";"%>
 <% end -%>
+
+/**
+ * @author auto
+ */
 @Data
 public class <%- name:gsub("%a", string.upper, 1)%> {
     <%for i,a in ipairs(value) do%>
     /**
      * <%- a.comment %>
      */
-    @Protobuf(order = <%- i %>)
+    @Protobuf(order = <%- i %><%if a.fieldType then%>, fieldType = <%-a.fieldType%><%end%>)
     private <%- a.type %> <%- a.value %><%if a.default then%> = <%-a.default%><%end %>;
     <% end -%>
 
