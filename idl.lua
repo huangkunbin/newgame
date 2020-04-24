@@ -124,11 +124,11 @@ local clz = {}
 
 idl.clz = clz
 
-local function class(_, methodname)
+local function class(_, classname)
   local function def(val)
-    local t = {type = clz[methodname].name,value = val}
+    local t = {type = clz[classname].name,value = val}
     return function(str)
-      clz[methodname].comment=str
+      clz[classname].comment = str
       t.comment = str
       return t
     end
