@@ -74,14 +74,12 @@ function idl.api(funcname)
           f.req = v.value
         elseif v.type == "res" then
           f.res = v.value
-        elseif v.type == "comment" then
-          f.comment = v.value
         end
-      end
+     end
       return f
     end
-    return function (t)
-      f.comment = t
+    return function (str)
+      f.comment = str
       return add_val
     end
 end
