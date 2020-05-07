@@ -1,9 +1,15 @@
+comment [[
+    这是一段
+    多行文本
+]]
+
 classdef "RoomInfo" {
     int "roomId" "房间ID",
 }
 
 classdef "TableInfo" {
     int "tableId" "桌子ID",
+    boolean "isVIP" "是否VIP房",
     string "password" "密码",
     class.RoomInfo "roomInfo" "房间信息"
 }

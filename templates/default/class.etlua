@@ -1,4 +1,8 @@
+<%if not iscommon then-%>
 package com.<%-projectname %>.game.games.<%- modname %>.dto;
+<%else-%>
+package com.<%-projectname %>.game.gamehall.dto;
+<%end-%>
 
 import com.baidu.bjf.remoting.protobuf.annotation.Protobuf;
 import lombok.Data;

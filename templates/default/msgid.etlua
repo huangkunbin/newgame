@@ -2,6 +2,7 @@ package com.<%-projectname %>.game.message;
 
 /**
  * <%-comment %> ModuleMsgIdConstant
+ *
  * @author auto
  */
 public interface <%- modname:gsub("%a", string.upper, 1)%>ModuleMsgIdConstant extends ModuleMsgIdConstant {

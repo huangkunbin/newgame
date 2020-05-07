@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * <%-comment %>
+ *
  * @author auto
  */
 @ResMsgHandler(<%- modname:gsub("%a", string.upper, 1)%>ModuleMsgIdConstant.<%- modname:upper() %>.<%- snake(name):upper() %>)

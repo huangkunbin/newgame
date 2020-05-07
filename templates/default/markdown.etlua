@@ -1,5 +1,10 @@
 ### <%-comment %>
 
+<%for _,c in ipairs(comments) do%>
+```
+ <%- c %>
+```
+<%end-%>
 
 <%for _,m in ipairs(methods) do%>
 * <%-m.id %>     
@@ -30,7 +35,9 @@
 
 
 
-<%for _,c in pairs(clz) do%>
+<%for _,k in pairs(clz_key) do%>
+<%c = clz[k]%>
+<%if c.isused then-%>
 | <%-c.name%>参数名          | 类型    | 备注                              |
 | :---------------: | :---------: | :----------------:|
 <%for _,a in ipairs(c.value) do-%>
@@ -38,5 +45,5 @@
 <% end -%>
 
 ***
-
+<%end-%>
 <%end %> 

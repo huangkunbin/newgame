@@ -1,11 +1,13 @@
 local idl = {}
 
 local T = {
-  int = "int",
-  long = "long",
   String = "String",
+  int = "int",
   Integer = "Integer",
-  Long = "Long"
+  long = "long",
+  Long = "Long",
+  boolean = "boolean",
+  Boolean = "Boolean"
 }
 idl.T = T
 
@@ -46,8 +48,11 @@ function idl.mod(modname)
     end
   end
 
+local comments = {}
+idl.comments = comments
+
 function idl.comment (str)
-    return {type = "comment",value = str}
+    comments[#comments+1] = str
 end
 
 function idl.api(funcname)
@@ -112,6 +117,23 @@ function idl.Long(val)
   end
 end
 
+function idl.boolean(val)
+  local t = {type = T.boolean,value = val}
+  return function(str)
+    t.comment = str
+    return t
+  end
+end
+
+function idl.Boolean(val)
+local t = {type = T.Boolean,value = val}
+t.fieldType = "FieldType.BOOL"
+return function(str)
+  t.comment = str
+  return t
+end
+end
+
 function idl.string(val)
     local t = {type = T.String,value = val}
     return function(str)
@@ -128,6 +150,7 @@ local function class(_, classname)
   local function def(val)
     local t = {type = clz[classname].name,value = val}
     return function(str)
+      clz[classname].isused = true
       clz[classname].comment = str
       t.comment = str
       return t
@@ -147,7 +170,6 @@ function idl.classdef(name)
   return function(value)
         t.value = value
         clz[t.name] = t
-        table.sort(clz)
   end
 end
 
@@ -159,6 +181,11 @@ function idl.list(E)
     t.fieldType = "FieldType.INT32"
   elseif t.innertype == T.Long then
     t.fieldType = "FieldType.INT64"
+  elseif t.innertype ==T.Boolean then
+    t.fieldType = "FieldType.BOOL"
+  end
+  if clz[E] then
+    clz[E].isused = true
   end
   return function (val)
     t.value = val

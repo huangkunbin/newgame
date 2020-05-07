@@ -12,6 +12,7 @@ import lombok.Data;
 <%if comment then%>
 /**
  * <%- comment %>
+ *
  * @author auto
  */
 <% end -%>
