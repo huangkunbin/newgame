@@ -75,7 +75,7 @@ function idl.api(funcname)
         elseif v.type == "res" then
           f.res = v.value
         end
-     end
+      end
       return f
     end
     return function (str)
