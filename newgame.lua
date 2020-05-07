@@ -24,7 +24,6 @@ env.Boolean = idl.Boolean
 env.classdef = idl.classdef
 env.class = idl.class
 env.list = idl.list
-env.comment = idl.comment
 env.require = require
 
 local mod = idl.mods
@@ -53,8 +52,6 @@ local HANDLER_PATH = ROOT_PATH..conf.HANDLER_PATH:gsub("{{MOD}}",mod.modname)
 local ROBOT_HANDLER_PATH = ROOT_PATH..conf.ROBOT_HANDLER_PATH:gsub("{{MOD}}",mod.modname)
 local MSGID_PATH = ROOT_PATH..conf.MSGID_PATH:gsub("{{MOD}}",mod.modname)
 local MARKDOWN_PATH = ROOT_PATH..conf.MARKDOWN_PATH:gsub("{{MOD}}",mod.modname)
-
-
 
 
 local function snake(s)
@@ -181,8 +178,6 @@ for _,m in ipairs(mod.methods) do
     create_file("RobotHandler",TEMPLATES_PATH.."robothandler.etlua",parameter)
     end
 end
-
-
 
 parameter = {}
 parameter.projectname = PROJECT_NAME
