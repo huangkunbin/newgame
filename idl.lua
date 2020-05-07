@@ -1,16 +1,9 @@
-local T = {
-  string = "String",
-  int = "int",
-  Integer = "Integer",
-  long = "long",
-  Long = "Long",
-  boolean = "boolean",
-  Boolean = "Boolean"
-}
-
 local function typedef(_, name)
+  if name == "string" then
+    name = "String"
+  end
   local function def(val)
-    local t = {type = T[name],value = val}
+    local t = {type = name,value = val}
     if name == "Integer" then
       t.fieldType = "FieldType.INT32"
     elseif name == "Long" then
@@ -27,8 +20,6 @@ local function typedef(_, name)
 end
 
 local idl = setmetatable({}, {__index = typedef})
-
-idl.T = T
 
 local mods = {}
 
@@ -123,9 +114,6 @@ idl.class = setmetatable({}, {__index = class})
 
 function idl.classdef(name)
   name = trim(name)
-  if not T[name] then
-    T[name] = name
-  end
   local t = {type = "classdef", name = name}
   return function(value)
         t.value = value
@@ -136,12 +124,12 @@ end
 function idl.list(E)
   E = trim(E)
   local t = {type = "List<"..E..">",value = ""}
-  t.innertype = T[E]
-  if t.innertype == T.Integer then
+  t.innertype = E
+  if t.innertype == "Integer" then
     t.fieldType = "FieldType.INT32"
-  elseif t.innertype == T.Long then
+  elseif t.innertype == "Long" then
     t.fieldType = "FieldType.INT64"
-  elseif t.innertype ==T.Boolean then
+  elseif t.innertype == "Boolean" then
     t.fieldType = "FieldType.BOOL"
   end
   if clz[E] then
