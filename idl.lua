@@ -1,7 +1,5 @@
-local idl = {}
-
 local T = {
-  String = "String",
+  string = "String",
   int = "int",
   Integer = "Integer",
   long = "long",
@@ -9,6 +7,27 @@ local T = {
   boolean = "boolean",
   Boolean = "Boolean"
 }
+
+local function typedef(_, name)
+  local function def(val)
+    local t = {type = T[name],value = val}
+    if name == "Integer" then
+      t.fieldType = "FieldType.INT32"
+    elseif name == "Long" then
+      t.fieldType = "FieldType.INT64"
+    elseif name == "Boolean" then
+      t.fieldType = "FieldType.BOOL"
+    end
+    return function(str)
+      t.comment = str
+      return t
+    end
+  end
+  return def
+end
+
+local idl = setmetatable({}, {__index = typedef})
+
 idl.T = T
 
 local mods = {}
@@ -81,65 +100,6 @@ end
 
 function idl.res(t)
     return {type = "res",value = t}
-end
-
-function idl.int(val)
-    local t = {type = T.int,value = val}
-    return function(str)
-      t.comment = str
-      return t
-    end
-end
-
-function idl.Integer(val)
-  local t = {type = T.Integer,value = val}
-  t.fieldType = "FieldType.INT32"
-  return function(str)
-    t.comment = str
-    return t
-  end
-end
-
-function idl.long(val)
-    local t = {type = T.long,value = val}
-    return function(str)
-      t.comment = str
-      return t
-    end
-end
-
-function idl.Long(val)
-  local t = {type = T.Long,value = val}
-  t.fieldType = "FieldType.INT64"
-  return function(str)
-    t.comment = str
-    return t
-  end
-end
-
-function idl.boolean(val)
-  local t = {type = T.boolean,value = val}
-  return function(str)
-    t.comment = str
-    return t
-  end
-end
-
-function idl.Boolean(val)
-local t = {type = T.Boolean,value = val}
-t.fieldType = "FieldType.BOOL"
-return function(str)
-  t.comment = str
-  return t
-end
-end
-
-function idl.string(val)
-    local t = {type = T.String,value = val}
-    return function(str)
-      t.comment = str
-      return t
-    end
 end
 
 local clz = {}
