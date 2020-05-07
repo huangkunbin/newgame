@@ -1,19 +1,23 @@
+local function addfieldtype(t)
+  if t.type == "Integer" or t.innertype == "Integer" then
+    t.fieldType = "FieldType.INT32"
+  elseif t.type == "Long" or t.innertype == "Long" then
+    t.fieldType = "FieldType.INT64"
+  elseif t.type == "Boolean" or t.innertype == "Boolean" then
+    t.fieldType = "FieldType.BOOL"
+  end
+  return t
+end
+
 local function typedef(_, name)
   if name == "string" then
     name = "String"
   end
   local function def(val)
     local t = {type = name,value = val}
-    if name == "Integer" then
-      t.fieldType = "FieldType.INT32"
-    elseif name == "Long" then
-      t.fieldType = "FieldType.INT64"
-    elseif name == "Boolean" then
-      t.fieldType = "FieldType.BOOL"
-    end
     return function(str)
       t.comment = str
-      return t
+      return addfieldtype(t)
     end
   end
   return def
@@ -125,13 +129,6 @@ function idl.list(E)
   E = trim(E)
   local t = {type = "List<"..E..">",value = ""}
   t.innertype = E
-  if t.innertype == "Integer" then
-    t.fieldType = "FieldType.INT32"
-  elseif t.innertype == "Long" then
-    t.fieldType = "FieldType.INT64"
-  elseif t.innertype == "Boolean" then
-    t.fieldType = "FieldType.BOOL"
-  end
   if clz[E] then
     clz[E].isused = true
   end
@@ -139,7 +136,7 @@ function idl.list(E)
     t.value = val
     return function(str)
       t.comment = str
-      return t
+      return addfieldtype(t)
     end
   end
 end
