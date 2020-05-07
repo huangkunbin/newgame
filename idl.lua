@@ -10,9 +10,6 @@ local function addfieldtype(t)
 end
 
 local function typedef(_, name)
-  if name == "string" then
-    name = "String"
-  end
   local function def(val)
     local t = {type = name,value = val}
     return function(str)
