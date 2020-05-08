@@ -133,7 +133,7 @@ end
 function idl.list(E)
   E = trim(E)
   if clz[E] then
-        clz[E].isused = true
+    clz[E].isused = true
   end
   local name = "List<"..E..">"
   return idl[name]
