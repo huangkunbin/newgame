@@ -1,3 +1,4 @@
+[TOC]
 ### <%-comment %>
 
 <%for _,c in ipairs(comments) do%>
@@ -7,9 +8,7 @@
 <%end-%>
 
 <%for _,m in ipairs(methods) do%>
-* <%-m.id %>     
-
-<%-m.comment %>:<%-snake(m.name):upper() -%> 
+#### <%-m.id %>:<%-m.comment %>
 
 <%if m.req then-%>
 请求参数
@@ -38,7 +37,8 @@
 <%for _,k in pairs(clz_key) do%>
 <%c = clz[k]%>
 <%if c.isused then-%>
-| <%-c.name%>参数名          | 类型    | 备注                              |
+#### <%-c.name%>
+| 参数名          | 类型    | 备注                              |
 | :---------------: | :---------: | :----------------:|
 <%for _,a in ipairs(c.value) do-%>
 | <%- a.value %> | <%- a.type %> | <%if a.value == "id" then%><%-a.default%><%else%><%-a.comment%><%end-%> |
