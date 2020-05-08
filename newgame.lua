@@ -16,15 +16,16 @@ env.api = idl.api
 env.comment = idl.comment
 env.req = idl.req
 env.res = idl.res
-env.int = idl.int
-env.long = idl.long
 env.String = idl.String
+env.int = idl.int
+env.Integer = idl.Integer
+env.long = idl.long
+env.Long = idl.Long
 env.boolean = idl.boolean
 env.Boolean = idl.Boolean
 env.classdef = idl.classdef
 env.class = idl.class
 env.list = idl.list
-env.require = require
 
 local mod = idl.mods
 local clz = idl.clz
@@ -132,8 +133,9 @@ local function get_pkgs(args)
  end
    if string.sub(a.type,1,4) == "List" then
     pkgs["import java.util.List"] = "import java.util.List"
-    if clz[a.innertype] then
-      pkgs[class_pkg_path..a.innertype] = class_pkg_path..a.innertype
+    local innertype = idl.getinnertype(a.type)
+    if clz[innertype] then
+      pkgs[class_pkg_path..innertype] = class_pkg_path..innertype
     end
    end
   end
@@ -156,6 +158,7 @@ end
 table.sort(clz_key)
 parameter.clz_key = clz_key
 parameter.comments = idl.comments
+parameter.getinnertype = idl.getinnertype
 create_file("Markdown",TEMPLATES_PATH.."markdown.etlua",parameter)
 
 parameter = {}

@@ -1,9 +1,17 @@
+local function getinnertype(typ)
+  if string.sub(typ,1,4) == "List" then
+    return string.sub(typ,6,#typ-1)
+  end
+  return typ
+end
+
 local function addfieldtype(t)
-  if t.type == "Integer" or t.innertype == "Integer" then
+  local innertype = getinnertype(t.type)
+  if innertype == "Integer" then
     t.fieldType = "FieldType.INT32"
-  elseif t.type == "Long" or t.innertype == "Long" then
+  elseif innertype == "Long" then
     t.fieldType = "FieldType.INT64"
-  elseif t.type == "Boolean" or t.innertype == "Boolean" then
+  elseif innertype == "Boolean" then
     t.fieldType = "FieldType.BOOL"
   end
   return t
@@ -21,6 +29,8 @@ local function typedef(_, name)
 end
 
 local idl = setmetatable({}, {__index = typedef})
+
+idl.getinnertype = getinnertype
 
 local mods = {}
 
@@ -122,18 +132,11 @@ end
 
 function idl.list(E)
   E = trim(E)
-  local t = {type = "List<"..E..">",value = ""}
-  t.innertype = E
   if clz[E] then
-    clz[E].isused = true
+        clz[E].isused = true
   end
-  return function (val)
-    t.value = val
-    return function(str)
-      t.comment = str
-      return addfieldtype(t)
-    end
-  end
+  local name = "List<"..E..">"
+  return idl[name]
 end
 
 return idl

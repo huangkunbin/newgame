@@ -16,7 +16,7 @@ import lombok.Data;
  * @author auto
  */
 <% end -%>
-@ResMsg(<%- modname:gsub("%a", string.upper, 1)%>ModuleMsgIdConstant.<%- modname:upper() %>.<%-snake(name):upper()%>)
+@ResMsg(value = <%- modname:gsub("%a", string.upper, 1)%>ModuleMsgIdConstant.<%- modname:upper() %>.<%-snake(name):upper()%>, description = "<%- comment %>")
 @Data
 public class Res<%-name:gsub("%a", string.upper, 1)%>Msg implements ResMessage {
    <%for i,a in ipairs(res) do%>
