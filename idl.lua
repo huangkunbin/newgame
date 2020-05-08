@@ -45,9 +45,9 @@ end
 
 local function add_method(t)
     for id, method in pairs(t) do
-       method.id=id
+       method.id = id
        local id_t = idl.int "id" "ID"
-       id_t.default=id
+       id_t.default = id
        if method.req then
         table.insert(method.req, 1,id_t)
        end
