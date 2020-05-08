@@ -27,7 +27,7 @@ env.classdef = idl.classdef
 env.class = idl.class
 env.list = idl.list
 
-local mod = idl.mods
+local mod = idl.m
 local clz = idl.clz
 
 if file_exists("proto/common_class.lua") then

@@ -32,9 +32,8 @@ local idl = setmetatable({}, {__index = typedef})
 
 idl.getinnertype = getinnertype
 
-local mods = {}
-
-idl.mods = mods
+local m = {}
+idl.m = m
 
 local function trim(s)
   return (s:gsub("^%s*(.-)%s*$", "%1"))
@@ -45,26 +44,26 @@ local function sort_methods(a,b)
 end
 
 local function add_method(t)
-    for id, m in pairs(t) do
-       m.id=id
+    for id, method in pairs(t) do
+       method.id=id
        local id_t = idl.int "id" "ID"
        id_t.default=id
-       if m.req then
-        table.insert( m.req, 1,id_t)
+       if method.req then
+        table.insert(method.req, 1,id_t)
        end
-       if m.res then
-        table.insert( m.res, 1,id_t)
+       if method.res then
+        table.insert(method.res, 1,id_t)
        end
-       mods.methods[#mods.methods+1] = m
+       m.methods[#m.methods+1] = method
     end
-    table.sort(mods.methods,sort_methods)
+    table.sort(m.methods,sort_methods)
 end
 
 function idl.mod(modname)
-    mods.modname = modname
-    mods.methods = {}
+    m.modname = modname
+    m.methods = {}
     return function (v)
-        mods.comment = v
+        m.comment = v
       return add_method
     end
   end
@@ -103,20 +102,12 @@ function idl.res(t)
 end
 
 local clz = {}
-
 idl.clz = clz
 
 local function class(_, classname)
-  local function def(val)
-    local t = {type = clz[classname].name,value = val}
-    return function(str)
-      clz[classname].isused = true
-      clz[classname].comment = str
-      t.comment = str
-      return t
-    end
-  end
-  return def
+  clz[classname].isused = true
+  local name = clz[classname].name
+  return idl[name]
 end
 
 idl.class = setmetatable({}, {__index = class})
