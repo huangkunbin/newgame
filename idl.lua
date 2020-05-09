@@ -104,15 +104,7 @@ end
 local clz = {}
 idl.clz = clz
 
-local function class(_, classname)
-  clz[classname].isused = true
-  local name = clz[classname].name
-  return idl[name]
-end
-
-idl.class = setmetatable({}, {__index = class})
-
-function idl.classdef(name)
+local function classdef(_, name)
   name = trim(name)
   local t = {type = "classdef", name = name}
   return function(value)
@@ -120,6 +112,14 @@ function idl.classdef(name)
         clz[t.name] = t
   end
 end
+
+local function class(_, classname)
+  clz[classname].isused = true
+  local name = clz[classname].name
+  return idl[name]
+end
+
+idl.class = setmetatable({}, {__index = class, __call = classdef})
 
 function idl.list(E)
   E = trim(E)

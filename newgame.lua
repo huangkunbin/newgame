@@ -13,7 +13,6 @@ end
 local env = {}
 env.mod = idl.mod
 env.api = idl.api
-env.comment = idl.comment
 env.req = idl.req
 env.res = idl.res
 env.String = idl.String
@@ -23,9 +22,9 @@ env.long = idl.long
 env.Long = idl.Long
 env.boolean = idl.boolean
 env.Boolean = idl.Boolean
-env.classdef = idl.classdef
 env.class = idl.class
 env.list = idl.list
+env.comment = idl.comment
 
 local mod = idl.m
 local clz = idl.clz

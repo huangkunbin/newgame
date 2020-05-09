@@ -3,11 +3,11 @@ comment [[
     多行文本
 ]]
 
-classdef "RoomInfo" {
+class "RoomInfo" {
     int "roomId" "房间ID",
 }
 
-classdef "TableInfo" {
+class "TableInfo" {
     int "tableId" "桌子ID",
     boolean "isVIP" "是否VIP房",
     String "password" "密码",
