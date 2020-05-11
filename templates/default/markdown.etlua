@@ -1,7 +1,7 @@
 [TOC]
-### <%-comment %>
+### <%-modcomment %>
 
-<%for _,c in ipairs(comments) do%>
+<%for _,c in ipairs(comment) do%>
 ```
  <%- c %>
 ```

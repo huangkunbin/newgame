@@ -26,7 +26,7 @@ env.class = idl.class
 env.list = idl.list
 env.comment = idl.comment
 
-local mod = idl.m
+local mod = idl.mod
 local clz = idl.clz
 
 if file_exists("proto/common_class.lua") then
@@ -145,7 +145,7 @@ local parameter = {}
 
 parameter.projectname = PROJECT_NAME
 parameter.modname = mod.modname
-parameter.comment = mod.comment
+parameter.modcomment = mod.comment
 parameter.methods = mod.methods
 parameter.snake = snake
 create_file("Msgid",TEMPLATES_PATH.."msgid.etlua",parameter)
@@ -156,7 +156,7 @@ for key,_ in pairs(clz) do
 end
 table.sort(clz_key)
 parameter.clz_key = clz_key
-parameter.comments = idl.comments
+parameter.comment = idl.comment
 parameter.getinnertype = idl.getinnertype
 create_file("Markdown",TEMPLATES_PATH.."markdown.etlua",parameter)
 
