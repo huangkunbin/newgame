@@ -77,8 +77,8 @@ end
 
 idl.mod = setmetatable({},{__call = moddef})
 
-local function apidef(f,funcname)
-    f.name = funcname
+local function apidef(_,funcname)
+    local f = {name = funcname}
     local function add_val(t)
       for _,v in ipairs(t) do
         if v.type == "req" then
