@@ -26,16 +26,14 @@ local function addfieldtype(t)
 end
 
 local function typedef(_, name)
-  local t = {}
-  t.type = name
-  local function def(t,val)
-    t.value = val
+  local function def(val)
+    local t = {type = name,value = val}
     return function(str)
       t.comment = str
       return addfieldtype(t)
     end
   end
-  return setmetatable(t, {__call = def})
+  return def
 end
 
 local idl = setmetatable({}, {__index = typedef})

@@ -1,6 +1,6 @@
 local idl = require "idl"
 local etlua = require "etlua"
-local inspect = require("inspect")
+-- local inspect = require("inspect")
 
 
 local function file_exists(path)
