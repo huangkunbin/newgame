@@ -129,7 +129,7 @@ local function get_pkgs(args)
    end
    if a.fieldType then
     pkgs["import com.baidu.bjf.remoting.protobuf.FieldType"] = "import com.baidu.bjf.remoting.protobuf.FieldType"
- end
+   end
    if string.sub(a.type,1,4) == "List" then
     pkgs["import java.util.List"] = "import java.util.List"
     local innertype = idl.getinnertype(a.type)
