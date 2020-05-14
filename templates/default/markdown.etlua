@@ -18,7 +18,7 @@
 <%for _,a in ipairs(m.req) do-%>
 | <%- a.value %> | <%if string.sub(a.type,1,4) == "List" then%><%- "["..getinnertype(a.type).."]" %><%else%><%- a.type %><%end%> | <%if a.value == "id" then%><%-a.default%><%else%><%-a.comment%><%end-%> |
 <%if clz[getinnertype(a.type)] then-%>
-<%set_used_calss(clz[getinnertype(a.type)])-%>
+<%set_used_class(clz[getinnertype(a.type)])-%>
 <% end -%>
 <% end -%>
 <%end-%>
@@ -31,7 +31,7 @@
 <%for _,a in ipairs(m.res) do-%>
 | <%- a.value %> | <%if string.sub(a.type,1,4) == "List" then%><%- "["..getinnertype(a.type).."]" %><%else%><%- a.type %><%end%> | <%if a.value == "id" then%><%-a.default%><%else%><%-a.comment%><%end-%> |
 <%if clz[getinnertype(a.type)] then-%>
-<%set_used_calss(clz[getinnertype(a.type)])-%>
+<%set_used_class(clz[getinnertype(a.type)])-%>
 <% end -%>
 <% end -%>
 <%end%>

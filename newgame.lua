@@ -148,12 +148,12 @@ local function get_pkgs(args)
     return array_sort(pkgs)
 end
 
-local function set_used_calss(c)
+local function set_used_class(c)
     c.isused = true
     for _, v in pairs(c.value) do
         local t = idl.getinnertype(v.type)
         if clz[t] then
-            set_used_calss(clz[t])
+            set_used_class(clz[t])
         end
     end
 end
@@ -175,7 +175,7 @@ table.sort(clz_key)
 parameter.clz_key = clz_key
 parameter.comment = idl.comment
 parameter.getinnertype = idl.getinnertype
-parameter.set_used_calss = set_used_calss
+parameter.set_used_class = set_used_class
 create_file("Markdown", TEMPLATES_PATH .. "markdown.etlua", parameter)
 local is_record
 for _, m in pairs(parameter.methods) do
