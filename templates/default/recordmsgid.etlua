@@ -1,0 +1,18 @@
+package com.<%-projectname %>.game.core.service.games.<%- modname %>.platform;
+
+import com.<%-projectname %>.game.platform.annotation.PlatformIdMsg;
+
+/**
+ * @author : auto
+ */
+@PlatformIdMsg
+public interface <%- modname:gsub("%a", string.upper, 1)%>PlatformId {
+     <%for _,m in ipairs(methods) do-%>
+     <%if m.res and m.desc and m.desc.record then%>
+    /**
+     * <%-m.comment %>
+     */
+    int <%-snake(m.name):upper() %> = <%-m.id %>;
+    <%end -%>
+    <%end -%> 
+}

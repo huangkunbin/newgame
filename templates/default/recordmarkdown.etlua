@@ -8,22 +8,8 @@
 <%end-%>
 
 <%for _,m in ipairs(methods) do%>
+<%if m.res and m.desc and m.desc.record then-%>
 #### <%-m.id %>:<%-m.comment %>
-
-<%if m.req then-%>
-请求参数
-
-| 参数名          | 类型    | 备注                              |
-| :---------------: | :---------: | :----------------:|
-<%for _,a in ipairs(m.req) do-%>
-| <%- a.value %> | <%if string.sub(a.type,1,4) == "List" then%><%- "["..getinnertype(a.type).."]" %><%else%><%- a.type %><%end%> | <%if a.value == "id" then%><%-a.default%><%else%><%-a.comment%><%end-%> |
-<%if clz[getinnertype(a.type)] then-%>
-<%set_used_calss(clz[getinnertype(a.type)])-%>
-<% end -%>
-<% end -%>
-<%end-%>
-
-<%if m.res then-%>
 响应参数
 
 | 参数名          | 类型    | 备注                              |
@@ -34,8 +20,8 @@
 <%set_used_calss(clz[getinnertype(a.type)])-%>
 <% end -%>
 <% end -%>
-<%end%>
 ***
+<%end%>
 <%end-%> 
 
 

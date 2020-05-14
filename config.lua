@@ -17,6 +17,8 @@ return {
     ROBOT_HANDLER_PATH = "robothandler/",
     --  消息ID路径
     MSGID_PATH = "msgid/",
+    -- 记录消息ID
+    RECORD_MSGID_PATH = "recordmsgid/",
     -- markdown文档路径
     MARKDOWN_PATH = "markdown/",
 }

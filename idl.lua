@@ -1,3 +1,4 @@
+
 local function trim(s)
   return (s:gsub("^%s*(.-)%s*$", "%1"))
 end
@@ -78,11 +79,13 @@ idl.mod = setmetatable({},{__call = moddef})
 local function apidef(_,funcname)
     local f = {name = funcname}
     local function add_val(t)
-      for _,v in ipairs(t) do
+      for _,v in pairs(t) do
         if v.type == "req" then
           f.req = v.value
         elseif v.type == "res" then
           f.res = v.value
+        else
+          f.desc = v
         end
       end
       return f
@@ -116,7 +119,6 @@ local function classdef(_, name)
 end
 
 local function classcreate(_, classname)
-  clz[classname].isused = true
   local name = clz[classname].name
   return idl[name]
 end
@@ -125,9 +127,6 @@ idl.class = setmetatable({}, {__index = classcreate, __call = classdef})
 
 function idl.list(E)
   E = trim(E)
-  if clz[E] then
-    clz[E].isused = true
-  end
   local name = "List<"..E..">"
   return idl[name]
 end

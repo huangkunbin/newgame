@@ -51,6 +51,7 @@ local CLASS_PATH = ROOT_PATH..conf.CLASS_PATH:gsub("{{MOD}}",mod.modname)
 local HANDLER_PATH = ROOT_PATH..conf.HANDLER_PATH:gsub("{{MOD}}",mod.modname)
 local ROBOT_HANDLER_PATH = ROOT_PATH..conf.ROBOT_HANDLER_PATH:gsub("{{MOD}}",mod.modname)
 local MSGID_PATH = ROOT_PATH..conf.MSGID_PATH:gsub("{{MOD}}",mod.modname)
+local RECORD_MSGID_PATH = ROOT_PATH..conf.RECORD_MSGID_PATH:gsub("{{MOD}}",mod.modname)
 local MARKDOWN_PATH = ROOT_PATH..conf.MARKDOWN_PATH:gsub("{{MOD}}",mod.modname)
 
 
@@ -90,9 +91,15 @@ local function create_file(typ,temp_file_path,parameter)
   elseif typ == "Msgid" then
     file_path = MSGID_PATH
     file_name = file_path..parameter.modname:gsub("%a", string.upper, 1).."ModuleMsgIdConstant.java"
+  elseif typ == "RecordMsgid" then
+    file_path = RECORD_MSGID_PATH
+    file_name = file_path..parameter.modname:gsub("%a", string.upper, 1).."PlatformId.java"
   elseif typ == "Markdown" then
     file_path = MARKDOWN_PATH
     file_name = file_path..parameter.modname..".md"
+  elseif typ == "RecordMarkdown" then
+    file_path = MARKDOWN_PATH
+    file_name = file_path..parameter.modname.."_event.md"
   elseif typ == "RobotHandler" then
     file_path = ROBOT_HANDLER_PATH
     file_name = file_path.."Res"..parameter.name:gsub("%a", string.upper, 1).."Handler"..".java"
@@ -141,6 +148,16 @@ local function get_pkgs(args)
   return array_sort(pkgs)
 end
 
+local function set_used_calss(c)
+   c.isused = true
+   for _, v in pairs(c.value) do
+    local t = idl.getinnertype(v.type)
+    if clz[t] then
+      set_used_calss(clz[t])
+    end
+   end
+end
+
 local parameter = {}
 
 parameter.projectname = PROJECT_NAME
@@ -158,7 +175,22 @@ table.sort(clz_key)
 parameter.clz_key = clz_key
 parameter.comment = idl.comment
 parameter.getinnertype = idl.getinnertype
+parameter.set_used_calss = set_used_calss
 create_file("Markdown",TEMPLATES_PATH.."markdown.etlua",parameter)
+local is_record
+for _, m in pairs(parameter.methods) do
+  if m.desc and m.desc.record then
+    is_record = true
+    break
+  end
+end
+if is_record then
+for _, c in pairs(parameter.clz) do
+  c.isused = nil
+end
+create_file("RecordMsgid",TEMPLATES_PATH.."recordmsgid.etlua",parameter)
+create_file("RecordMarkdown",TEMPLATES_PATH.."recordmarkdown.etlua",parameter)
+end
 
 parameter = {}
 parameter.projectname = PROJECT_NAME
