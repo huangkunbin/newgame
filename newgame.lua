@@ -73,8 +73,8 @@ local function create_file(typ, temp_file_path, parameter)
     local template = template_file:read("*a")
     template_file:close()
 
-    local str = etlua.compile(template)
-    local file = str(parameter)
+    local func = etlua.compile(template)
+    local result = func(parameter)
 
     local file_path
     local file_name
@@ -116,9 +116,9 @@ local function create_file(typ, temp_file_path, parameter)
         return
     end
 
-    local code = assert(io.open(file_name, 'w'))
-    code:write(file)
-    code:close()
+    local file = assert(io.open(file_name, 'w'))
+    file:write(result)
+    file:close()
 end
 
 local common_class_pkg_path = "import com." .. PROJECT_NAME .. ".game.gamehall.dto."
