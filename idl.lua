@@ -26,14 +26,17 @@ local function addfieldtype(t)
 end
 
 local function typedef(_, name)
-    local function def(val)
-        local t = { type = name, value = val }
+    local t = {type = name}
+    t = addfieldtype(t)
+    local function def(self,val)
+        self.value = val
         return function(str)
-            t.comment = str
-            return addfieldtype(t)
+            self.comment = str
+            return self
         end
     end
-    return def
+    setmetatable(t, { __call = def })
+    return t
 end
 
 local idl = setmetatable({}, { __index = typedef })
@@ -125,9 +128,14 @@ end
 idl.class = setmetatable({}, { __index = classcreate, __call = classdef })
 
 function idl.list(E)
-    E = trim(E)
-    local name = "List<" .. E .. ">"
-    return idl[name]
+    if type(E) == "table" then
+        E.type = "List<" .. E.type .. ">"
+        return E
+    else
+        E = trim(E)
+        local name = "List<" .. E .. ">"
+        return idl[name]
+    end
 end
 
 return idl

@@ -45,7 +45,7 @@ mod "demo" "测试模块" {
             list("Integer") "cards" "手牌"
         },
         res {
-            list("Integer") "cards" "手牌"
+            list(list(list(list("Integer")))) "cards" "手牌"
         }
     },
 }
