@@ -26,13 +26,18 @@ local function addfieldtype(t)
 end
 
 local function typedef(_, name)
-    local t = {type = name}
+    local t = { type = name }
     t = addfieldtype(t)
-    local function def(self,val)
+    local function def(self, val)
         self.value = val
         return function(str)
             self.comment = str
-            return self
+            local nt = {}
+            nt.type = self.type
+            nt.fieldType = self.fieldType
+            nt.value = self.value
+            nt.comment = self.comment
+            return nt
         end
     end
     setmetatable(t, { __call = def })
@@ -43,7 +48,7 @@ local idl = setmetatable({}, { __index = typedef })
 
 idl.getinnertype = getinnertype
 
-local function add_comment (comments, str)
+local function add_comment(comments, str)
     comments[#comments + 1] = str
 end
 
@@ -65,7 +70,7 @@ local function add_method(m, t)
     table.sort(m.methods, sort_methods)
 end
 
-local function moddef (m, modname)
+local function moddef(m, modname)
     m.modname = modname
     m.methods = {}
     return function(v)
